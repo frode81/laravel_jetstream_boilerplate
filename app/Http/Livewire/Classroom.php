@@ -4,35 +4,23 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
-use App\Document;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use App\Models\Image;
-use App\Models\Category;
+use App\Models\Classroom as Model;
+use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 
 
-
-
-use App\Models\course as Model;
-
-
-class Course extends Component
+class Classroom extends Component
 {
     use WithPagination;
-    use WithFileUploads;
-
 
     public $paginate = 10;
-    public $Category;
 
     public $name;
    public $description;
-   public $url;
-   public $category;
+   public $classid;
    public $owner;
-   public $photo;
+   public $courses = [];
+   public $category;
 
 
     public $mode = 'create';
@@ -46,19 +34,15 @@ class Course extends Component
     public $showConfirmDeletePopup = false;
 
     protected $rules = [
-      'name' => 'required',
-      'description' => 'required',
-      'url' => 'required',
-      'category' => 'required',
-      'owner' => 'required',
-      'photo' => 'image|max:1024', // 1MB Max
+'name' => 'required',
+'description' => 'required',
+'classid' => 'required',
+'owner' => 'required',
+'courses.*' => 'required',
+'category' => 'required',
 
-      ];
+];
 
-    public function mount()
-    {
-       $this->owner = auth()->user()->id;
-    }
 
 
     public function updated($propertyName)
@@ -73,8 +57,8 @@ class Course extends Component
 
     public function render()
     {
-        $model = Model::where('name', 'like', '%'.$this->search.'%')->orWhere('description', 'like', '%'.$this->search.'%')->orWhere('url', 'like', '%'.$this->search.'%')->orWhere('category', 'like', '%'.$this->search.'%')->orWhere('owner', 'like', '%'.$this->search.'%')->orWhere('photo', 'like', '%'.$this->search.'%')->latest()->paginate($this->paginate);
-        return view('livewire.course', [
+        $model = Model::where('name', 'like', '%'.$this->search.'%')->orWhere('description', 'like', '%'.$this->search.'%')->orWhere('classid', 'like', '%'.$this->search.'%')->orWhere('owner', 'like', '%'.$this->search.'%')->orWhere('courses', 'like', '%'.$this->search.'%')->orWhere('category', 'like', '%'.$this->search.'%')->latest()->paginate($this->paginate);
+        return view('livewire.classroom', [
             'rows'=> $model
         ]);
     }
@@ -83,12 +67,10 @@ class Course extends Component
     public function create ()
     {
         $authid = auth()->user()->id;
-
         $this->mode = 'create';
         $this->resetForm();
-        $this->Categorys = Category::where('owner', '=', $authid,)->get();
+        $this->Courses = Course::where('owner', '=', $authid,)->get();
         $this->owner = auth()->user()->id;
-
 
         $this->showForm = true;
     }
@@ -96,19 +78,21 @@ class Course extends Component
 
     public function edit($primaryId)
     {
-        $authid = auth()->user()->id;
 
         $this->mode = 'update';
         $this->primaryId = $primaryId;
         $model = Model::find($primaryId);
-        $this->Categorys = Category::where('owner', '=', $authid,)->get();
 
         $this->name= $model->name;
-        $this->description= $model->description;
-        $this->url= $model->url;
-        $this->category= $model->category;
-        $this->owner= $model->owner;
-        $this->photo= $model->photo;
+$this->description= $model->description;
+$this->classid= $model->classid;
+$this->owner= $model->owner;
+
+$this->courses= $model->courses;
+
+
+$this->courses= $model->courses;
+$this->category= $model->category;
 
 
 
@@ -124,18 +108,16 @@ class Course extends Component
     {
           $this->validate();
 
-          $this->photo->store('photos');
-
-
           $model = new Model();
 
              $model->name= $this->name;
-              $model->description= $this->description;
-              $model->url= $this->url;
-              $model->category= $this->category;
-              $model->owner= $this->owner;
-              $model->photo= $this->photo->store('photos');
-              $model->save();
+$model->description= $this->description;
+$model->classid= $this->classid;
+$model->owner= $this->owner;
+$model->courses= implode(' , ', (array)$this->courses);
+
+$model->category= $this->category;
+ $model->save();
 
           $this->resetForm();
           session()->flash('message', 'Record Saved Successfully');
@@ -145,11 +127,11 @@ class Course extends Component
     public function resetForm()
     {
         $this->name= "";
-        $this->description= "";
-        $this->url= "";
-        $this->category= "";
-        $this->owner= "";
-        $this->photo= "";
+$this->description= "";
+$this->classid= "";
+$this->owner= "";
+$this->courses= "";
+$this->category= "";
 
     }
 
@@ -160,13 +142,13 @@ class Course extends Component
 
           $model = Model::find($this->primaryId);
 
-            $model->name= $this->name;
-            $model->description= $this->description;
-            $model->url= $this->url;
-            $model->category= $this->category;
-            $model->owner= $this->owner;
-            $model->photo= $this->photo;
-            $model->save();
+             $model->name= $this->name;
+$model->description= $this->description;
+$model->classid= $this->classid;
+$model->owner= $this->owner;
+$model->courses= $this->courses;
+$model->category= $this->category;
+ $model->save();
 
           $this->resetForm();
 

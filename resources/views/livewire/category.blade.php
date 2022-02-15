@@ -1,7 +1,7 @@
 <div>
     @if (session()->has('message'))
         <div class="flex mx-auto w-1/4 sm:w-full md:w-full">
-            <div class="text-black px-6 py-4 border-0 rounded relative mb-4 bg-green-300 mx-auto">
+            <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-green-500 mx-auto">
             <span class="inline-block align-middle mr-8">
                 <b class="capitalize">Success!</b> {{ session('message') }}
               </span>
@@ -22,7 +22,7 @@
                         </div>
                         <div>
                             <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition" wire:click="create">
-                               <i class="fas fa-plus-circle pr-2"></i>{{ __('Add New') }} Course
+                               <i class="fas fa-plus-circle pr-2"></i>{{ __('Add New') }} Category
                             </button>
                         </div>
                     </div>
@@ -47,19 +47,7 @@
                             </th>
 
 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            URL
-                            </th>
-
-<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            CATEGORY
-                            </th>
-
-<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             OWNER
-                            </th>
-
-<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            PHOTO
                             </th>
 
 
@@ -75,18 +63,12 @@
 
  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $row->description}}</td>
 
- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $row->url}}</td>
-
- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $row->category}}</td>
-
  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $row->owner}}</td>
 
- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ Str::limit($row->photo, 20) }}</td>
-
 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900 px-3" wire:click="edit({{ $row->id }})"><i class="fas fa-edit"></i></a>
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900 px-3" wire:click="confirmDelete({{ $row->id }})"><i class="fas fa-trash-alt"></i></a>
-                            </td></tr>@empty  <tr><td>No Records Found</td></tr>   @endforelse
+                      <a href="#" class="text-indigo-600 hover:text-indigo-900 px-3" wire:click="edit({{ $row->id }})"><i class="fas fa-edit"></i></a>
+                      <a href="#" class="text-indigo-600 hover:text-indigo-900 px-3" wire:click="confirmDelete({{ $row->id }})"><i class="fas fa-trash-alt"></i></a>
+                      </td></tr>@empty  <tr><td>No Records Found</td></tr>   @endforelse
 
                         </tbody>
                     </table>
@@ -132,34 +114,7 @@
                                     <div class="mt-2">
                                        <div><label class='block'><span class='text-gray-700 @error('name') text-red-500  @enderror'>Name</span><input type='text' class='mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('name')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' wire:model='name'>@error('name')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
 <div><label class='block'><span class='text-gray-700 @error('description') text-red-500  @enderror'>Description</span><input type='text' class='mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('description')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' wire:model='description'>@error('description')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
-<div><label class='block'><span class='text-gray-700 @error('url') text-red-500  @enderror'>Url</span><input type='text' class='mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('url')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' wire:model='url'>@error('url')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
-
-
-<div><label class='block'><span class='text-gray-700 @error('category') text-red-500  @enderror'>Category</span>
-
-  <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('category')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" wire:model='category'>
-      <option value="" selected>Choose Category</option>
-      @foreach($Categorys as $category)
-          <option value="{{ $category->id }}">{{ $category->name }}</option>
-      @endforeach
-  </select>
-  @error('category')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
-  <!--
-
-  <input type='text' class='mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('category')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' wire:model='category'>
-  @error('category')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
-
-
-<select class="form-control" name="Category">
-    <option value="" selected>Choose Category</option>
-    @foreach($Categorys as $category)
-        <option value="{{ $category->id }}">{{ $category->name }}</option>
-    @endforeach
-</select>
--->
-
 <div><label class='block'><span class='text-gray-700 @error('owner') text-red-500  @enderror'></span><input type='hidden' class='mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('owner')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' wire:model='owner'>@error('owner')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
-<div><label class='block'><span class='text-gray-700 @error('photo') text-red-500  @enderror'>Photo</span><input type="file" class='mt-1 block w-full rounded-md border-gray-300 shadow-sm @error('photo')  border-red-500 @enderror focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' wire:model='photo'>@error('photo')<span class='text-red-500 text-sm'>{{ $message }}</span>@enderror</label></div>
 
                                     </div>
                                 </div>
@@ -167,7 +122,7 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button @if($mode == 'create') wire:click="store()" @else wire:click="update()" @endif type="button"
-                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-white shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
                                 {{ $mode == 'create' ? 'Save Record' : 'Update Record' }}
                             </button>
                             <button wire:click="$set('showForm', false)" type="button"

@@ -13,9 +13,16 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Courses') }}
                     </x-jet-nav-link>
-                </div>
+                    <x-jet-nav-link href="{{ route('category') }}" :active="request()->routeIs('category')">
+                        {{ __('Category') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('classroom') }}" :active="request()->routeIs('classroom')">
+                        {{ __('Classroom') }}
+                    </x-jet-nav-link>
+                       </div>
+
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -69,6 +76,10 @@
                     </div>
                 @endif
 
+                @if(Auth::user()->hasRole('superuser'))
+                <livewire:user-management-menus/>
+                @endif
+
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
                     <x-jet-dropdown align="right" width="48">
@@ -105,6 +116,7 @@
                                     {{ __('API Tokens') }}
                                 </x-jet-dropdown-link>
                             @endif
+
 
                             <div class="border-t border-gray-100"></div>
 
